@@ -21,12 +21,7 @@ Este proyecto está construido con amor y las siguientes tecnologías:
 * `jackson-datatype-jsr310`: Soporte para tipos de fecha y hora de Java 8+ en JSON.
 * `spring-shell-starter`: El corazón de la interfaz de línea de comandos.    
 
-* `spring-boot-starter-web`: Soporte web básico (aunque principalmente es CLI).
-* `spring-boot-starter`: Core de Spring Boot.
-* `lombok`: Para reducir código boilerplate en modelos Java.
-* `spring-boot-starter-test`: Para pruebas unitarias.
-* `jackson-datatype-jsr310`: Soporte para tipos de fecha y hora de Java 8+ en JSON.
-* `spring-shell-starter`: El corazón de la interfaz de línea de comandos.
+
 
 ## 📁 Estructura del Proyecto (Simplificada)
 
