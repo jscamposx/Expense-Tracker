@@ -3,7 +3,7 @@ package com.expense_tracker.service;
 import com.expense_tracker.model.Expense;
 import com.expense_tracker.repository.FileExpenseRepository;
 import org.springframework.stereotype.Service;
-
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -15,7 +15,7 @@ public class ExpenseService {
         this.expenseRepository = expenseRepository;
     }
 
-    public Expense createExpense(String expenseName, float expenseAmount) {
+    public Expense createExpense(String expenseName, BigDecimal expenseAmount) {
         Expense newExpense = new Expense(expenseName, expenseAmount);
         return expenseRepository.save(newExpense);
     }
@@ -28,7 +28,7 @@ public class ExpenseService {
         return expenseRepository.findForMonth(month);
     }
 
-    public double getExpenseSummary() {
+    public BigDecimal getExpenseSummary() {
         return expenseRepository.findSummary();
     }
 
