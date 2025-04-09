@@ -1,6 +1,7 @@
 package com.expense_tracker.exceptions;
 
 public class ExpenseStorageException extends RuntimeException {
+
     private static final long serialVersionUID = 1L;
 
     public ExpenseStorageException(String message) {
@@ -9,6 +10,7 @@ public class ExpenseStorageException extends RuntimeException {
 
     public ExpenseStorageException(String message, Throwable cause) {
         super(message, cause);
+
     }
 
     public ExpenseStorageException(Throwable cause) {

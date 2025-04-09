@@ -3,20 +3,23 @@ package com.expense_tracker.repository;
 import com.expense_tracker.exceptions.ExpenseStorageException;
 import com.expense_tracker.model.Expense;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
-
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
@@ -26,6 +29,11 @@ public class FileExpenseRepository implements ExpenseRepository {
     private final Path filePath = Paths.get("expenses.json");
     private final ReentrantLock lock = new ReentrantLock();
     private List<Expense> expensesList = new ArrayList<>();
+
+    public FileExpenseRepository() {
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    }
 
     @PostConstruct
     public void init() {
@@ -64,7 +72,9 @@ public class FileExpenseRepository implements ExpenseRepository {
                     StandardOpenOption.CREATE,
                     StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
+            e.printStackTrace();
             throw new ExpenseStorageException("Error guardando gastos", e);
+
         }
     }
 
@@ -74,7 +84,7 @@ public class FileExpenseRepository implements ExpenseRepository {
         try{
             int newExpenseId = generatedNextExpenseId();
             expense.setExpenseID(newExpenseId);
-            expense.setExpenseDate(LocalDate.now().toString());
+            expense.setExpenseDate(LocalDate.now());
             expensesList.add(expense);
             saveExpensesListToFile();
             return expense;
@@ -90,12 +100,11 @@ public class FileExpenseRepository implements ExpenseRepository {
                 .orElse(0) + 1;
     }
 
-
     @Override
     public List<Expense> findAll() {
         lock.lock();
         try {
-            return new ArrayList<>(expensesList); // Se devuelve una copia para evitar modificaciones externas
+            return new ArrayList<>(expensesList);
         } finally {
             lock.unlock();
         }
@@ -105,26 +114,26 @@ public class FileExpenseRepository implements ExpenseRepository {
     public List<Expense> findForMonth(int month) {
         lock.lock();
         try {
-            List<Expense> monthlyExpenses = new ArrayList<>();
-            for (Expense expense : expensesList) {
-                LocalDate date = LocalDate.parse(expense.getExpenseDate());
-                if (date.getMonthValue() == month) {
-                    monthlyExpenses.add(expense);
-                }
-            }
-            return monthlyExpenses;
+            return expensesList.stream()
+                    .filter(expense -> {
+                        LocalDate date = expense.getExpenseDate();
+                        return date != null && date.getMonthValue() == month;
+                    })
+                    .collect(Collectors.toList());
         } finally {
             lock.unlock();
         }
     }
 
+
     @Override
-    public double findSummary() {
+    public BigDecimal findSummary() {
         lock.lock();
         try {
             return expensesList.stream()
-                    .mapToDouble(Expense::getExpenseAmount)
-                    .sum();
+                    .map(Expense::getExpenseAmount)
+                    .filter(Objects::nonNull)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
         } finally {
             lock.unlock();
         }
@@ -136,7 +145,7 @@ public class FileExpenseRepository implements ExpenseRepository {
         try {
             boolean removed = expensesList.removeIf(expense -> expense.getExpenseID() == expenseId);
             if (removed) {
-                saveExpensesListToFile(); // Guardar solo si hubo cambios
+                saveExpensesListToFile();
             }
             return removed;
         } finally {
