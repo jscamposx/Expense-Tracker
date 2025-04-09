@@ -194,4 +194,4 @@ Bash
 java -jar <nombre-del-archivo>.jar
 (Reemplaza <nombre-del-archivo>.jar con el nombre real del archivo JAR generado).
 
-¡Interactúa! Una vez ejecutado, verás el prompt de Spring Shell (shell:>) y podrás empezar a usar los comandos listados arriba.
+¡Interactúa! Una vez ejecutado, verás el prompt de Spring Shell (shell:>) y podrás empezar a usar los comandos.
