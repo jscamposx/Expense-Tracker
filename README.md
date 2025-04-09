@@ -1,6 +1,6 @@
 # 📊 Expense Tracker CLI
 
-¡Hola! 👋 Bienvenido/a al Expense Tracker, una sencilla aplicación de línea de comandos para llevar un registro de tus gastos.
+¡Hola! 👋 Bienvenido/a al Expense Tracker, una sencilla aplicación de línea de comandos para llevar un registro de tus gastos. https://roadmap.sh/projects/expense-tracker
 
 ## ✨ Tecnologías Utilizadas
 
