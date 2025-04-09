@@ -1,13 +1,10 @@
 package com.expense_tracker.service;
 
-
 import com.expense_tracker.model.Expense;
-
 import com.expense_tracker.repository.FileExpenseRepository;
 import org.springframework.stereotype.Service;
 
-
-
+import java.util.List;
 
 @Service
 public class ExpenseService {
@@ -18,13 +15,24 @@ public class ExpenseService {
         this.expenseRepository = expenseRepository;
     }
 
-
     public Expense createExpense(String expenseName, float expenseAmount) {
-        Expense newExpense = new Expense(expenseName,  expenseAmount);
+        Expense newExpense = new Expense(expenseName, expenseAmount);
         return expenseRepository.save(newExpense);
     }
 
+    public List<Expense> getAllExpenses() {
+        return expenseRepository.findAll();
+    }
 
+    public List<Expense> getExpensesForMonth(int month) {
+        return expenseRepository.findForMonth(month);
+    }
 
+    public double getExpenseSummary() {
+        return expenseRepository.findSummary();
+    }
 
+    public boolean deleteExpense(int expenseId) {
+        return expenseRepository.delete(expenseId);
+    }
 }
