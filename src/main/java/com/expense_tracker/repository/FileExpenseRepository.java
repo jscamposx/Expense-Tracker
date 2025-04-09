@@ -89,4 +89,58 @@ public class FileExpenseRepository implements ExpenseRepository {
                 .max()
                 .orElse(0) + 1;
     }
+
+
+    @Override
+    public List<Expense> findAll() {
+        lock.lock();
+        try {
+            return new ArrayList<>(expensesList); // Se devuelve una copia para evitar modificaciones externas
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public List<Expense> findForMonth(int month) {
+        lock.lock();
+        try {
+            List<Expense> monthlyExpenses = new ArrayList<>();
+            for (Expense expense : expensesList) {
+                LocalDate date = LocalDate.parse(expense.getExpenseDate());
+                if (date.getMonthValue() == month) {
+                    monthlyExpenses.add(expense);
+                }
+            }
+            return monthlyExpenses;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public double findSummary() {
+        lock.lock();
+        try {
+            return expensesList.stream()
+                    .mapToDouble(Expense::getExpenseAmount)
+                    .sum();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public boolean delete(int expenseId) {
+        lock.lock();
+        try {
+            boolean removed = expensesList.removeIf(expense -> expense.getExpenseID() == expenseId);
+            if (removed) {
+                saveExpensesListToFile(); // Guardar solo si hubo cambios
+            }
+            return removed;
+        } finally {
+            lock.unlock();
+        }
+    }
 }
