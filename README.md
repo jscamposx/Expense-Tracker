@@ -177,16 +177,18 @@ Para salir de la aplicación CLI.
 ▶️ Cómo Ejecutar la Aplicación
 Construir el JAR: Asegúrate de tener Maven instalado y ejecuta el siguiente comando en la raíz del proyecto (donde está el pom.xml):
 
-Bash
+```Bash
 
 mvn clean package -DskipTests
+```
 Esto generará un archivo .jar en el directorio target/. El nombre será algo como expense_tracker-0.0.1-SNAPSHOT.jar.
 
 Ejecutar el JAR: Abre una terminal o línea de comandos, navega hasta el directorio target/ y ejecuta:
 
-Bash
+```Bash
 
 java -jar <nombre-del-archivo>.jar
+```
 (Reemplaza <nombre-del-archivo>.jar con el nombre real del archivo JAR generado).
 
 ¡Interactúa! Una vez ejecutado, verás el prompt de Spring Shell (shell:>) y podrás empezar a usar los comandos.
