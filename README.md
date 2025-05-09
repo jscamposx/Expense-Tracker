@@ -4,7 +4,7 @@
 
 ## ✨ Tecnologías Utilizadas
 
-Este proyecto está construido con amor y las siguientes tecnologías:
+Este proyecto está construido con las siguientes tecnologías:
 
 * ☕ **Java 21**: La versión más reciente de Java LTS.
 * 🌱 **Spring Boot 3**: Para facilitar la creación de la aplicación y la configuración.
